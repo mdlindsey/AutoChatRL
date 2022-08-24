@@ -12,6 +12,7 @@ Menu, Tray, Tip,  % "Cat Facts"
 Menu, Tray, Icon, % "brand/cat.ico"
 
 ; Assign hotkeys for toggle/prompts
+Hotkey, %CFG_KEY_END%, Stop
 Hotkey, %CFG_KEY_TOG%, ToggleState
 Hotkey, %CFG_KEY_INT%, IntervalConfigPrompt
 Hotkey, %CFG_KEY_USR%, MultiUserConfigPrompt
@@ -30,7 +31,7 @@ ShowTrayTip(UI_INIT_TITLE, UI_INIT_MESSAGE)
 ; Assign hotkeys for static messages
 for StaticKey, StaticMessage in CFG_MSG_STATIC {
     Dispatcher := Func("SendStaticMessage").bind(StaticMessage)
-    Hotkey, %StaticKey%, %Stop()%
+    Hotkey, %StaticKey%, % Dispatcher
 }
 
 SendStaticMessage(msg) {

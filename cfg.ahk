@@ -3,17 +3,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Hotkeys can be changed here
-CFG_KEY_TOG := "F9" ; Key to toggle script on/off
-CFG_KEY_INT := "F8" ; Key to prompt interval config
-CFG_KEY_USR := "F7" ; Key to prompt multi-user config
+CFG_KEY_TOG := "F7" ; Key to toggle script on/off
+CFG_KEY_END := "F8" ; Key to turn the script off
+CFG_KEY_INT := "F6" ; Key to prompt interval config
+CFG_KEY_USR := "F5" ; Key to prompt multi-user config
 
 ; This can be a url or filepath (eg: messages/CatFacts.txt)
 CFG_MSG_SRC := "https://raw.githubusercontent.com/mdlindsey/AutoChatRL-AHK/main/messages/CatFacts.txt"
 
 ; Static messages/hotkeys can be changed here
 CFG_MSG_STATIC := Object() ; Do not delete this line
-CFG_MSG_STATIC["F10"] := "Follow us at twitch.tv/rlcatfacts"
-CFG_MSG_STATIC["F11"] := "All proceeds are donated to charity"
+CFG_MSG_STATIC["F11"] := "Follow us at twitch.tv/rlcatfacts"
 CFG_MSG_STATIC["F12"] := "Please support your local animal shelter <3"
 
 ; Interval config has a prompt above via CFG_KEY_INT hotkey
