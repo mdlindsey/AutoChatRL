@@ -3,10 +3,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Hotkeys can be changed here
-CFG_KEY_TOG := "F7" ; Key to toggle script on/off
-CFG_KEY_END := "F8" ; Key to turn the script off
-CFG_KEY_INT := "F6" ; Key to prompt interval config
-CFG_KEY_USR := "F5" ; Key to prompt multi-user config
+CFG_KEY_RUN := "F5" ; Key to turn the script on
+CFG_KEY_END := "F6" ; Key to turn the script off
+CFG_KEY_INT := "F7" ; Key to prompt interval config
+CFG_KEY_USR := "F8" ; Key to prompt multi-user config
 
 ; This can be a url or filepath (eg: messages/CatFacts.txt)
 CFG_MSG_SRC := "https://raw.githubusercontent.com/mdlindsey/AutoChatRL-AHK/main/messages/CatFacts.txt"
@@ -26,6 +26,13 @@ CFG_USER_ID := 1 ; Your position in the group (eg: 1-3)
 ; Misc config
 CFG_RANDOM  := true   ; Use random or sequential order
 CFG_CHANNEL := "game" ; Which chat channel to use ("game", "team", or "party")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                  This appears in your task tray                   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+OS_TASK_NAME := "Cat Facts"
+OS_TASK_ICON := "brand/cat.ico"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;              This is the text that shows on prompts               ;;

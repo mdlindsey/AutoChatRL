@@ -2,11 +2,27 @@
 
 If you don't already have `AutoHotKey` you can [download it here](https://autohotkey.com/download).
 
-Run `app.ahk` to load the script; edit `cfg.ahk` to alter configuration.
+Run `app.ahk` to load the script; edit `config.ahk` to alter configuration. The script will need to be restarted to reflect configuration changes made in `config.ahk`.
 
-## Simplified Alt Accounts for Epic/Steam
+## How to use
 
-Some people choose to run this script with an alternate account as the brief input disruption can be consequential in higher level gameplay.
+Hotkeys can be changed in `config.ahk`.
+
+Press `F5` to start sending messages; press `F6` to stop sending messages. 
+
+Press `F7` to change the time between messages (`CFG_INTERVAL` in `config.ahk`) via prompt without the need to restart the script.
+
+Press `F8` for the multi-user prompt if multiple people are running this script; users are not zero-indexed.
+
+### Message source
+
+By default, the script pulls `messages/CatFacts.txt` from the `main` branch of this repo. If you prefer to load facts from your local PC, change `CFG_MSG_SRC` in `config.ahk` to the filepath you wish to use (eg: `messages/CatFacts.txt`).
+
+You can assign static messages to hotkeys of your choice via `CFG_MSG_STATIC` in `config.ahk`; sending static messages will stop the script to prevent input conflict.
+
+## Simplified alt accounts for Epic/Steam
+
+Some people choose to run this script with an alternate Rocket League account as the brief input disruption can be consequential in higher level gameplay.
 
 ### Setting up an alt account
 

@@ -4,23 +4,22 @@
 
 #NoEnv
 #Persistent
-#Include cfg.ahk
+#Include config.ahk
 #SingleInstance, Force
 
 ; Custom task tray name/icon
-Menu, Tray, Tip,  % "Cat Facts"
-Menu, Tray, Icon, % "brand/cat.ico"
+Menu, Tray, Tip,  % OS_TASK_NAME
+Menu, Tray, Icon, % OS_TASK_ICON
 
 ; Assign hotkeys for toggle/prompts
+Hotkey, %CFG_KEY_RUN%, Start
 Hotkey, %CFG_KEY_END%, Stop
-Hotkey, %CFG_KEY_TOG%, ToggleState
 Hotkey, %CFG_KEY_INT%, IntervalConfigPrompt
 Hotkey, %CFG_KEY_USR%, MultiUserConfigPrompt
 
 MSG_TOTAL := 0     ; This will be equal to ObjCount(MSG_QUEUE)
 MSG_USAGE := []    ; Message indices will exist here after use
 MSG_QUEUE := []    ; Messages from file or config are stored here
-RUN_CYCLE := false ; When this is true the cycle will recur
 
 ; Load messages on initialization
 LoadMessages()
@@ -30,61 +29,39 @@ ShowTrayTip(UI_INIT_TITLE, UI_INIT_MESSAGE)
 
 ; Assign hotkeys for static messages
 for StaticKey, StaticMessage in CFG_MSG_STATIC {
-    Dispatcher := Func("SendStaticMessage").bind(StaticMessage)
+    Dispatcher := Func("SendStaticChatRL").bind(StaticMessage)
     Hotkey, %StaticKey%, % Dispatcher
-}
-
-SendStaticMessage(msg) {
-    Stop()
-    SendChatRL(msg)
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                          Main Process                             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; This is called when the toggle key is pressed
-ToggleState() {
-    global RUN_CYCLE
-    if (RUN_CYCLE) {
-        Stop()
-    } else {
-        Start()
-    }
+; This is triggered via the CFG_KEY_RUN hotkey
+Start() {
+    global UI_START_TITLE
+    global UI_START_MESSAGE
+    ShowToolTip(UI_START_TITLE, UI_START_MESSAGE)
+    SetTimer, Cycle, off ; Kill existing cycle
+    SetTimer, Cycle, -1  ; Kickoff new cycle
 }
 
-; This is called via Toggle()
+; This is triggered via the CFG_KEY_END hotkey
 Stop() {
     global UI_STOP_TITLE
     global UI_STOP_MESSAGE
-    global RUN_CYCLE := false
     SetTimer, Cycle, off
     ShowToolTip(UI_STOP_TITLE, UI_STOP_MESSAGE)
 }
 
-; This is called via Toggle()
-Start() {
-    global UI_START_TITLE
-    global UI_START_MESSAGE
-    global RUN_CYCLE := true
-    ShowToolTip(UI_START_TITLE, UI_START_MESSAGE)
-    SetTimer, Cycle, -1
-}
-
-; This runs recursively until stopped
+; This runs recursively until its timer is killed
 Cycle() {
-    global RUN_CYCLE
     global MSG_USAGE
     global MSG_QUEUE
     global MSG_TOTAL
     global CFG_RANDOM
     global CFG_CHANNEL
     global CFG_INTERVAL
-
-    ; Halt the cycle when the stop key is pressed
-    if (!RUN_CYCLE) {
-        return
-    }
 
     TotalUsed := ObjCount(MSG_USAGE)
     ; Reset and restart if we've used all messages
@@ -117,10 +94,9 @@ IntervalConfigPrompt() {
     global CFG_INTERVAL
     global UI_INT_TITLE
     global UI_INT_PROMPT
+    ; Get interval input in seconds and convert to milliseconds
     IntervalInput := InputPrompt(UI_INT_TITLE, UI_INT_PROMPT, Floor(CFG_INTERVAL / 1000))
-    if (IntervalInput >= 1) {
-        CFG_INTERVAL := Floor(IntervalInput * 1000)
-    }
+    CFG_INTERVAL := Max(1000, Floor(IntervalInput * 1000))
 }
 
 ; Multi-user config prompt
@@ -133,7 +109,7 @@ MultiUserConfigPrompt() {
     global UI_MU_TOTAL_TITLE
     global UI_MU_TOTAL_PROMPT
 
-    PreviousUsers := CFG_USERS
+    PreviousUsers := CFG_USERS ; Used to determine if we need to update interval
     UserCountInput := InputPrompt(UI_MU_TOTAL_TITLE, UI_MU_TOTAL_PROMPT, CFG_USERS)
     if (UserCountInput <= 1) {
         CFG_USERS := 1
@@ -144,6 +120,7 @@ MultiUserConfigPrompt() {
         CFG_USER_ID := Min(CFG_USERS, Max(1, UserIdInput))
     }
 
+    ; If users changed, adjust our interval to maintain cadence
     if (PreviousUsers != CFG_USERS) {
         CFG_INTERVAL += (CFG_USERS - PreviousUsers) * (CFG_INTERVAL / PreviousUsers)
     }
@@ -155,24 +132,7 @@ MultiUserConfigPrompt() {
 ;;                             Utilities                             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Set the message globals
-SetMessages(RawMessageStr) {
-    global CFG_USERS
-    global CFG_USER_ID
-    global MSG_QUEUE := []
-    RawMessages := StrSplit(RawMessageStr, "`n")
-    RawTotal    := ObjCount(RawMessages)
-    MsgPerUser  := Floor(RawTotal / CFG_USERS)
-    StartIndex  := (CFG_USER_ID - 1) * MsgPerUser + 1
-    EndIndex    := StartIndex + MsgPerUser
-    for i, msg in RawMessages {
-        if (i >= StartIndex and i <= EndIndex) {
-            MSG_QUEUE.Push(msg)
-        }
-    }
-    global MSG_TOTAL := ObjCount(MSG_QUEUE)
-}
-
+; Determine message source and pass to SetMessages()
 LoadMessages() {
     global CFG_MSG_SRC
     ; Try CFG_MSG_SRC as file
@@ -195,6 +155,24 @@ LoadMessages() {
     }
     ; Resort to raw string
     SetMessages(CFG_MSG_SRC)
+}
+
+; Set the message globals
+SetMessages(RawMessageStr) {
+    global CFG_USERS
+    global CFG_USER_ID
+    global MSG_QUEUE := []
+    RawMessages := StrSplit(RawMessageStr, "`n")
+    RawTotal    := ObjCount(RawMessages)
+    MsgPerUser  := Floor(RawTotal / CFG_USERS)
+    StartIndex  := (CFG_USER_ID - 1) * MsgPerUser + 1
+    EndIndex    := StartIndex + MsgPerUser
+    for i, msg in RawMessages {
+        if (i >= StartIndex and i <= EndIndex) {
+            MSG_QUEUE.Push(msg)
+        }
+    }
+    global MSG_TOTAL := ObjCount(MSG_QUEUE)
 }
 
 ; RL doesn't allow copy/paste in chat so we have to used SendInput
@@ -221,6 +199,12 @@ SendChatRL(OutputStr, Channel="game") {
     Send {Enter}
 }
 
+; Wrapper to stop recursion before static output
+SendStaticChatRL(msg) {
+    Stop()
+    SendChatRL(msg)
+}
+
 ; Avoid fugly AHK syntax
 RandomInt(min, max) {
     Random RandomInt, min, max
@@ -232,6 +216,15 @@ InputPrompt(PromptTitle, PromptBody, DefaultValue) {
     Stop() ; Halt execution to prevent autochat from submitting input
     InputBox, InputValue, %PromptTitle%, %PromptBody%,, 320, 140,,,,,%DefaultValue%
     return InputValue
+}
+
+; ToolTips pop at the window level
+ShowToolTip(TitleText, BodyText, TTL=3000, PosX=0, PosY=0) {
+    ToolTip, %TitleText%`n%BodyText%, %PosX%, %PosY%
+    SetTimer, HideToolTip, % (-1 * TTL)
+}
+HideToolTip() {
+    ToolTip
 }
 
 ; TrayTips pop at the OS level
@@ -246,15 +239,6 @@ HideTrayTip() {
         Sleep 200  ; It may be necessary to adjust this sleep duration
         Menu Tray, Icon
     }
-}
-
-; ToolTips pop at the window level
-ShowToolTip(TitleText, BodyText, TTL=3000, PosX=0, PosY=0) {
-    ToolTip, %TitleText%`n%BodyText%, %PosX%, %PosY%
-    SetTimer, HideToolTip, % (-1 * TTL)
-}
-HideToolTip() {
-    ToolTip
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
