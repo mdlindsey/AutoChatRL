@@ -40,7 +40,7 @@ CFG_CHANNEL := "game" ; Which chat channel to use ("game", "team", or "party")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 OS_TASK_NAME := "Cat Facts"
-OS_TASK_ICON := "brand/cat.ico"
+OS_TASK_ICON := "images/cat.ico"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;              This is the text that shows on prompts               ;;
