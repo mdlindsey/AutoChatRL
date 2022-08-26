@@ -20,6 +20,12 @@ By default, the script pulls `messages/CatFacts.txt` from the `main` branch of t
 
 You can assign static messages to hotkeys of your choice via `CFG_MSG_STATIC` in `config.ahk`; sending static messages will stop the script to prevent input conflict.
 
+### Bakkes Plugin
+
+To use the BakkesMod plugin, drag/drop `bakkes/AutoChat.dll` into your BakkesMod `plugins` folder.
+
+To find your BakkesMod folder, open the BakkesMod injector window and select `File > Open BakkesMod Folder`.
+
 ## Simplified alt accounts for Epic/Steam
 
 Some people choose to run this script with an alternate Rocket League account as the brief input disruption can be consequential in higher level gameplay.
