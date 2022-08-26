@@ -11,6 +11,7 @@ CFG_KEY_USR := "F8" ; Key to prompt multi-user config
 ; Used by Bakkes plugin on game start/end but can be used manually
 CFG_KEY_GAME_START := "F3" ; Starts script w/delay relative to user ID
 CFG_KEY_GAME_END   := "F4" ; Stops the script and sends static messages
+CFG_KICKOFF_DELAY  := 3500 ; Delay first message of game to not disrupt kickoff
 
 ; This can be a url or filepath (eg: messages/CatFacts.txt)
 CFG_MSG_SRC := "https://raw.githubusercontent.com/mdlindsey/AutoChatRL-AHK/main/messages/CatFacts.txt"
