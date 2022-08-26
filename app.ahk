@@ -96,13 +96,12 @@ StartWithDelay() {
     global CFG_USERS
     global CFG_USER_ID
     global CFG_INTERVAL
-    global CFG_KICKOFF_DELAY
     ; Delay start if they are not user #1
     Delay := 1 ; 1ms delay by default
     if (CFG_USER_ID > 1) {
         Delay := (CFG_USER_ID - 1) * (CFG_INTERVAL / CFG_USERS) + 1
     }
-    Start(Delay + CFG_KICKOFF_DELAY)
+    Start(Delay)
 }
 
 ; Stop script and send static messages if user #1
