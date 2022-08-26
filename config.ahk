@@ -8,6 +8,11 @@ CFG_KEY_END := "F6" ; Key to turn the script off
 CFG_KEY_INT := "F7" ; Key to prompt interval config
 CFG_KEY_USR := "F8" ; Key to prompt multi-user config
 
+; Used by Bakkes plugin on game start/end but can be used manually
+CFG_KEY_GAME_START := "F3" ; Starts script w/delay relative to user ID
+CFG_KEY_GAME_END   := "F4" ; Stops the script and sends static messages
+CFG_KICKOFF_DELAY  := 3500 ; Delay first message of game to not disrupt kickoff
+
 ; This can be a url or filepath (eg: messages/CatFacts.txt)
 CFG_MSG_SRC := "https://raw.githubusercontent.com/mdlindsey/AutoChatRL-AHK/main/messages/CatFacts.txt"
 
@@ -15,6 +20,9 @@ CFG_MSG_SRC := "https://raw.githubusercontent.com/mdlindsey/AutoChatRL-AHK/main/
 CFG_MSG_STATIC := Object() ; Do not delete this line
 CFG_MSG_STATIC["F11"] := "Follow us at twitch.tv/rlcatfacts"
 CFG_MSG_STATIC["F12"] := "Please support your local animal shelter <3"
+
+; Used by CFG_KEY_GAME_END
+CFG_MSG_STATIC_DELAY := 100 ; Delay between static messages in milliseconds
 
 ; Interval config has a prompt above via CFG_KEY_INT hotkey
 CFG_INTERVAL := 30000 ; Delay between messages in milliseconds
@@ -32,7 +40,7 @@ CFG_CHANNEL := "game" ; Which chat channel to use ("game", "team", or "party")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 OS_TASK_NAME := "Cat Facts"
-OS_TASK_ICON := "brand/cat.ico"
+OS_TASK_ICON := "images/cat.ico"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;              This is the text that shows on prompts               ;;

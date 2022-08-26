@@ -16,6 +16,8 @@ Hotkey, %CFG_KEY_RUN%, Start
 Hotkey, %CFG_KEY_END%, Stop
 Hotkey, %CFG_KEY_INT%, IntervalConfigPrompt
 Hotkey, %CFG_KEY_USR%, MultiUserConfigPrompt
+Hotkey, %CFG_KEY_GAME_START%, StartWithDelay
+Hotkey, %CFG_KEY_GAME_END%, StopWithStaticMessages
 
 MSG_TOTAL := 0     ; This will be equal to ObjCount(MSG_QUEUE)
 MSG_USAGE := []    ; Message indices will exist here after use
@@ -29,7 +31,7 @@ ShowTrayTip(UI_INIT_TITLE, UI_INIT_MESSAGE)
 
 ; Assign hotkeys for static messages
 for StaticKey, StaticMessage in CFG_MSG_STATIC {
-    Dispatcher := Func("SendStaticChatRL").bind(StaticMessage)
+    Dispatcher := Func("SendStaticChatRL").bind(Trim(StaticMessage))
     Hotkey, %StaticKey%, % Dispatcher
 }
 
@@ -38,12 +40,12 @@ for StaticKey, StaticMessage in CFG_MSG_STATIC {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; This is triggered via the CFG_KEY_RUN hotkey
-Start() {
+Start(delay:=1) {
     global UI_START_TITLE
     global UI_START_MESSAGE
     ShowToolTip(UI_START_TITLE, UI_START_MESSAGE)
     SetTimer, Cycle, off ; Kill existing cycle
-    SetTimer, Cycle, -1  ; Kickoff new cycle
+    SetTimer, Cycle, % delay * -1  ; Kickoff new cycle
 }
 
 ; This is triggered via the CFG_KEY_END hotkey
@@ -88,6 +90,36 @@ Cycle() {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                         Config Prompts                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Start script w/delay relative to user ID
+StartWithDelay() {
+    global CFG_USERS
+    global CFG_USER_ID
+    global CFG_INTERVAL
+    global CFG_KICKOFF_DELAY
+    ; Delay start if they are not user #1
+    Delay := 1 ; 1ms delay by default
+    if (CFG_USER_ID > 1) {
+        Delay := (CFG_USER_ID - 1) * (CFG_INTERVAL / CFG_USERS) + 1
+    }
+    Start(Delay + CFG_KICKOFF_DELAY)
+}
+
+; Stop script and send static messages if user #1
+StopWithStaticMessages() {
+    Stop()
+
+    global CFG_USER_ID
+    global CFG_CHANNEL
+    global CFG_MSG_STATIC
+    global CFG_MSG_STATIC_DELAY
+    if (CFG_USER_ID == 1) {
+        for key, staticMsg in CFG_MSG_STATIC {
+            Sleep, %CFG_MSG_STATIC_DELAY%
+            SendChatRL(Trim(staticMsg), CFG_CHANNEL)
+        }
+    }
+}
 
 ; Interval config prompt
 IntervalConfigPrompt() {
