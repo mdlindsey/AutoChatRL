@@ -2,29 +2,31 @@
 
 If you don't already have `AutoHotKey` you can [download it here](https://autohotkey.com/download).
 
-Run `app.ahk` to load the script; edit `config.ahk` to alter configuration. The script will need to be restarted to reflect configuration changes made in `config.ahk`.
+Run `AutoChat.ahk` to load the AHK script or open with a text editor to alter configuration. The script will need to be restarted to reflect manual configuration changes.
 
 ## How to use
 
-Hotkeys can be changed in `config.ahk`.
+Hotkeys can be changed in `AutoChat.ahk`.
 
 Press `F5` to start sending messages; press `F6` to stop sending messages. 
 
-Press `F7` to change the time between messages (`CFG_INTERVAL` in `config.ahk`) via prompt without the need to restart the script.
+Press `F7` to change the time between messages (`CFG_INTERVAL`) via prompt without the need to restart the script.
 
 Press `F8` for the multi-user prompt if multiple people are running this script; users are not zero-indexed.
 
 ### Message source
 
-By default, the script pulls `messages/CatFacts.txt` from the `main` branch of this repo. If you prefer to load facts from your local PC, change `CFG_MSG_SRC` in `config.ahk` to the filepath you wish to use (eg: `messages/CatFacts.txt`).
+By default, the script pulls `messages/CatFacts.txt` from the `main` branch of this repo. If you prefer to load facts from your local PC, change `CFG_MSG_SRC` in `AutoChat.ahk` to the filepath you wish to use (eg: `messages/CatFacts.txt`).
 
-You can assign static messages to hotkeys of your choice via `CFG_MSG_STATIC` in `config.ahk`; sending static messages will stop the script to prevent input conflict.
+You can assign static messages to hotkeys of your choice via `CFG_MSG_STATIC` in `AutoChat.ahk`; sending static messages will stop the script to prevent input conflict.
 
 ### Bakkes Plugin
 
 To use the BakkesMod plugin, drag/drop `bakkes/AutoChat.dll` into your BakkesMod `plugins` folder.
 
 To find your BakkesMod folder, open the BakkesMod injector window and select `File > Open BakkesMod Folder`.
+
+The `AutoChat.ahk` script must be running for BakkesMod plugin automation.
 
 ## Simplified alt accounts for Epic/Steam
 

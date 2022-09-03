@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build": "npm run build:bakkes",
+    "build:bakkes": "msbuild bakkes/AutoChat.sln"
+  }
+}
